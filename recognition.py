@@ -112,7 +112,7 @@ class FaceRecognition:
                     if matches[best_match_index]:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
-                        confidence = face_confidence(face_distances[best_match_index]) + " Acceso Autorizado"
+                        confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado"
 
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
                     self.face_names.append(f'{name} ({confidence})')          
@@ -127,14 +127,17 @@ class FaceRecognition:
                 bottom *= 4
                 left *= 4
 
+                (name_por, autori) = os.path.splitext(name)
+
                 # Creamos el marco con el nombre
                 # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
                 # Hacemos el rectángulo para el nombre y la confidence
                 # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
                 cv2.rectangle(frame, (left, bottom - 60), (right, bottom), (0, 0, 255), cv2.FILLED)
-                # Colocamos el texto, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
-                cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
+                cv2.putText(frame, name_por, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, autori, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
 
