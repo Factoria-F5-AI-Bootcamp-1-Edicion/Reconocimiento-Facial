@@ -100,8 +100,8 @@ class FaceRecognition:
                     # Comprueba si las caras que ve la cámara hacen match con las caras conocidas (carpeta 'faces')
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
                     # Dejamos por defecto 'Unknow' para caras no conocidas
-                    name = "Unknown"
-                    confidence = '???'
+                    name = "Acceso No Autorizado"
+                    confidence = "?"
 
                     # Calculamos la 'face_distance', es decir, la similitud entre la cara que ve la cámara y las caras conocidas
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
@@ -112,10 +112,10 @@ class FaceRecognition:
                     if matches[best_match_index]:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
-                        confidence = face_confidence(face_distances[best_match_index])
+                        confidence = face_confidence(face_distances[best_match_index]) + " Acceso Autorizado"
 
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
-                    self.face_names.append(f'{name} ({confidence})')           
+                    self.face_names.append(f'{name} ({confidence})')          
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
@@ -132,9 +132,11 @@ class FaceRecognition:
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
                 # Hacemos el rectángulo para el nombre y la confidence
                 # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
-                cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom - 60), (right, bottom), (0, 0, 255), cv2.FILLED)
                 # Colocamos el texto, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
                 cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+
+
 
             # Mostramos la imagen resultante
             salida_camara = cv2.resize(frame, (0, 0), fx=1, fy=1)
