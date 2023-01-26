@@ -4,6 +4,14 @@ import os, sys
 import cv2
 import numpy as np
 import math
+import logging
+
+# Creamos una configuración de log para ir añadiéndolos
+logging.basicConfig(
+    level= logging.INFO,
+    filename="logging_record.log", 
+    filemode="w", #Cambiar a "a" cuando no se quiera sobreescribir los logs
+    format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Creamos la función que nos dara el porcentaje de seguridad sobre la identificación de la cara, para ello usamos la "face_distance" (que
 # indica cuanto se parece la cara que detectamos a la cara que tenemos guardada en nuestros datos, a mayor valor menor similaritud), 
@@ -122,7 +130,8 @@ class FaceRecognition:
                 cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
             # Mostramos la imagen resultante
-            cv2.imshow('Face Recognition', frame)
+            salida_camara = cv2.resize(frame, (0, 0), fx=1, fy=1)
+            cv2.imshow('Reconocimiento Facial', salida_camara)
 
             # Fijamos la letra 'Q' del teclado, para romper el bucle y salir del reconocimiento facial.
             if cv2.waitKey(1) == ord('q'):
