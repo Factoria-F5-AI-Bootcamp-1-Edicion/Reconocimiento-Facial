@@ -65,7 +65,7 @@ class FaceRecognition:
             # Leemos la captura y extraemos el fotograma en "frame" y "ret" nos indicará "True" si la captura ha sido exitosa.
             ret, frame = video_capture.read()
 
-            # Añadimos para solo precesar cada dos fotogramas y ahorra poder de cómputo.
+            # Añadimos para solo precesar cada dos fotogramas y ahorra poder de cómputo. Cuando 'process_current_frame' es True.
             if self.process_current_frame:
                 # Reescalar el frame del video a un cuarto de su tamaño para agilizar el reconocimiento.
                 small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -74,32 +74,37 @@ class FaceRecognition:
                 # "COLOR_BGR2RGB" de cv2.
                 rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
 
------------------------------
 
-                # Find all the faces and face encodings in the current frame of video
+                # Encuentra las posiciones y codificaciones del fotograma actual
                 self.face_locations = face_recognition.face_locations(rgb_small_frame)
                 self.face_encodings = face_recognition.face_encodings(rgb_small_frame, self.face_locations)
 
                 self.face_names = []
+                # Recorre todas las codificaciones de los fotogramas capturados por la cámara
                 for face_encoding in self.face_encodings:
-                    # See if the face is a match for the known face(s)
+                    # Comprueba si las caras que ve la cámara hacen match con las caras conocidas (carpeta 'faces')
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
+                    # Dejamos por defecto 'Unknow' para caras no conocidas
                     name = "Unknown"
                     confidence = '???'
 
-                    # Calculate the shortest distance to face
+                    # Calculamos la 'face_distance', es decir, la similitud entre la cara que ve la cámara y las caras conocidas
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
 
+                    # Con la funcion 'argmin' de numpy, obtenemos el índice de la 'face_distance' menor, y la guardamos como mejor match 'best_match_index'
                     best_match_index = np.argmin(face_distances)
+                    # Con el índice elegido como mejor, seleccionamos el mejor match de 'matches'(en el caso de que sí haya match).
                     if matches[best_match_index]:
+                        # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
                         confidence = face_confidence(face_distances[best_match_index])
 
-                    self.face_names.append(f'{name} ({confidence})')
-
+                    # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
+                    self.face_names.append(f'{name} ({confidence})')           
+            # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
-            # Display the results
+            # Muestra los resultados
             for (top, right, bottom, left), name in zip(self.face_locations, self.face_names):
                 # Scale back up face locations since the frame we detected in was scaled to 1/4 size
                 top *= 4
