@@ -54,7 +54,14 @@ class FaceRecognition:
 
             # Añadimos la codificación de la imagen a la variable "known_face_encodings" y el nombre a "known_face_names".
             self.known_face_encodings.append(face_encoding)
-            self.known_face_names.append(image)
+            logging.info(f"Probando {image}")
+            # Obtenemos solo el nombre, sin la extensión.
+            basename = os.path.basename(image)
+            logging.info(f"Probando {basename}")
+            (filename, ext) = os.path.splitext(basename)
+            logging.info(f"Probando {filename}")
+            # Añadimos el nombre de la cara conocida a nombres conocidos
+            self.known_face_names.append(filename)
         # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
         print(self.known_face_names)
 
