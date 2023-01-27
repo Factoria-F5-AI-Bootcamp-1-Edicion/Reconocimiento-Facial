@@ -5,11 +5,13 @@ import cv2
 import numpy as np
 import math
 import logging
+from datetime import datetime
+
 
 # Creamos una configuración de log para ir añadiéndolos
 logging.basicConfig(
     level= logging.INFO,
-    filename="logging_record.log", 
+    filename="logs/logging_record.log", 
     filemode="w", #Cambiar a "a" cuando no se quiera sobreescribir los logs
     format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -113,6 +115,14 @@ class FaceRecognition:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
                         confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado"
+                        img = frame
+                        now = datetime.now()
+                        logging.info(now)
+                        os.chdir("/Users/Pablo/Factoria F5/CV_grupo11/imagenes")
+                        filename = f'{name}, {now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg'
+                        logging.info(filename)
+                        cv2.imwrite(filename,img)
+                        
 
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
                     self.face_names.append(f'{name} ({confidence})')          
@@ -138,6 +148,8 @@ class FaceRecognition:
                 # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
                 cv2.putText(frame, name_por, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
                 cv2.putText(frame, autori, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+
+
 
 
 
