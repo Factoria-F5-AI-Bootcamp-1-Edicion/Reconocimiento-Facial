@@ -49,6 +49,18 @@ class FaceRecognition:
     def encode_faces(self):
         # Hacemos referencia a las imagenes d ela carpeta "faces".
         for image in os.listdir('faces'):
+
+            directory = image
+            parent_dir = "/Users/Pablo/Factoria F5/CV_grupo11/imagenes"
+            mode = 0o666
+            path = os.path.join(parent_dir, directory)
+            os.makedirs(path, mode, exist_ok = True)
+
+            parent_dir2 = "/Users/Pablo/Factoria F5/CV_grupo11/rostros"
+            path2 = os.path.join(parent_dir2, directory)
+            os.makedirs(path2, mode, exist_ok = True)
+            
+
             # Cargamos la imagen de la carpeta "faces".
             face_image = face_recognition.load_image_file(f"faces/{image}")
             # Codificamos la imagen que hemos cargado antes.
@@ -104,6 +116,7 @@ class FaceRecognition:
                     # Dejamos por defecto 'Unknow' para caras no conocidas
                     name = "Acceso No Autorizado"
                     confidence = "?"
+                    matching = False
 
                     # Calculamos la 'face_distance', es decir, la similitud entre la cara que ve la cámara y las caras conocidas
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
@@ -115,11 +128,13 @@ class FaceRecognition:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
                         confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado"
+                        matching = True
+                        prename = name
                         img = frame
                         now = datetime.now()
                         logging.info(now)
-                        os.chdir("/Users/Pablo/Factoria F5/CV_grupo11/imagenes")
-                        filename = f'{name}, {now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg'
+                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/imagenes/{name}.jpg")
+                        filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
                         
@@ -139,6 +154,16 @@ class FaceRecognition:
 
                 (name_por, autori) = os.path.splitext(name)
 
+                if matching == True:
+                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/rostros/{prename}.jpg")
+                        frame_cara = frame[top:bottom, left:right] 
+                        print("[INFO] Object found. Saving locally.") 
+                        cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
+                else:
+                    pass
+
+
+
                 # Creamos el marco con el nombre
                 # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -148,9 +173,6 @@ class FaceRecognition:
                 # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
                 cv2.putText(frame, name_por, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
                 cv2.putText(frame, autori, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-
-
-
 
 
             # Mostramos la imagen resultante
