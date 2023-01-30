@@ -134,9 +134,9 @@ class FaceRecognition:
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
-                        #face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
-                        #age = [ sub['age'] for sub in face_analysis ]
-                        #emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
+                        face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
+                        age = [ sub['age'] for sub in face_analysis ]
+                        emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
 
                     self.face_names = [(name, confidence, acceso, age, emotion)]
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
