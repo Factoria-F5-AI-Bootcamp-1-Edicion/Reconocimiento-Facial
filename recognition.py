@@ -6,6 +6,7 @@ import numpy as np
 import math
 import logging
 from datetime import datetime
+from deepface import DeepFace
 
 
 # Creamos una configuración de log para ir añadiéndolos
@@ -127,7 +128,12 @@ class FaceRecognition:
                     if matches[best_match_index]:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
-                        confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado"
+
+                        face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
+                        age = [ sub['age'] for sub in face_analysis ]
+                        emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
+
+                        confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado." + str(age) + str(emotion)
                         matching = True
                         prename = name
                         img = frame
@@ -140,7 +146,7 @@ class FaceRecognition:
                         
 
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
-                    self.face_names.append(f'{name} {confidence}')          
+                    self.face_names.append(f'{name} {confidence}')
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
@@ -152,7 +158,9 @@ class FaceRecognition:
                 bottom *= 4
                 left *= 4
 
-                (name_por, autori) = os.path.splitext(name)
+                (name_por, caracs) = os.path.splitext(name)
+                (name_por2, autori) = os.path.splitext(name_por)
+
 
                 if matching == True:
                         os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/rostros/{prename}")
@@ -163,16 +171,20 @@ class FaceRecognition:
                     pass
 
 
+                
+
+
 
                 # Creamos el marco con el nombre
                 # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
                 # Hacemos el rectángulo para el nombre y la confidence
                 # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
-                cv2.rectangle(frame, (left, bottom - 60), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom + 90), (right, bottom), (0, 0, 255), cv2.FILLED)
                 # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
-                cv2.putText(frame, name_por, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, autori[1:], (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, name_por2, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, autori[1:], (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, caracs[1:], (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
             # Mostramos la imagen resultante
