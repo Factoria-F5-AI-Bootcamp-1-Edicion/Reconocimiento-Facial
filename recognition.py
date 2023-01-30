@@ -64,19 +64,17 @@ class FaceRecognition:
             logging.info(f"Probando {basename}")
             (filename, ext) = os.path.splitext(basename)
             logging.info(f"Probando {filename}")
-            # Añadimos el nombre de la cara conocida a nombres conocidos
-            self.known_face_names.append(filename)
 
             directory = filename
-            parent_dir = "/Users/Pablo/Factoria F5/CV_grupo11/imagenes"
-            mode = 0o666
+            parent_dir = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes"
             path = os.path.join(parent_dir, directory)
-            os.makedirs(path, mode, exist_ok = True)
+            os.makedirs(path, exist_ok = True)
 
-            parent_dir2 = "/Users/Pablo/Factoria F5/CV_grupo11/rostros"
+            parent_dir2 = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros"
             path2 = os.path.join(parent_dir2, directory)
-            os.makedirs(path2, mode, exist_ok = True)
-
+            os.makedirs(path2, exist_ok = True)
+            # Añadimos el nombre de la cara conocida a nombres conocidos
+            self.known_face_names.append(filename)
         # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
         print(self.known_face_names)
 
@@ -94,7 +92,6 @@ class FaceRecognition:
         while True:
             # Leemos la captura y extraemos el fotograma en "frame" y "ret" nos indicará "True" si la captura ha sido exitosa.
             ret, frame = video_capture.read()
-
             # Añadimos para solo precesar cada dos fotogramas y ahorra poder de cómputo. Cuando 'process_current_frame' es True.
             if self.process_current_frame:
                 # Reescalar el frame del video a un cuarto de su tamaño para agilizar el reconocimiento.
@@ -104,87 +101,74 @@ class FaceRecognition:
                 # "COLOR_BGR2RGB" de cv2.
                 rgb_small_frame = cv2.cvtColor(small_frame, cv2.COLOR_BGR2RGB)
 
-
                 # Encuentra las posiciones y codificaciones del fotograma actual
                 self.face_locations = face_recognition.face_locations(rgb_small_frame)
                 self.face_encodings = face_recognition.face_encodings(rgb_small_frame, self.face_locations)
 
-                self.face_names = []
                 # Recorre todas las codificaciones de los fotogramas capturados por la cámara
                 for face_encoding in self.face_encodings:
                     # Comprueba si las caras que ve la cámara hacen match con las caras conocidas (carpeta 'faces')
                     matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
-                    # Dejamos por defecto 'Unknow' para caras no conocidas
-                    name = "Acceso No Autorizado"
-                    confidence = "?"
-                    matching = False
-
                     # Calculamos la 'face_distance', es decir, la similitud entre la cara que ve la cámara y las caras conocidas
                     face_distances = face_recognition.face_distance(self.known_face_encodings, face_encoding)
 
                     # Con la funcion 'argmin' de numpy, obtenemos el índice de la 'face_distance' menor, y la guardamos como mejor match 'best_match_index'
                     best_match_index = np.argmin(face_distances)
+                    # Dejamos por defecto 'Unknow' para caras no conocidas
+                    name = 'No se reconoce'
+                    confidence = '?'
+                    acceso = 'Acceso No Autorizado'
+                    age = '?'
+                    emotion = '?'
                     # Con el índice elegido como mejor, seleccionamos el mejor match de 'matches'(en el caso de que sí haya match).
                     if matches[best_match_index]:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
-
-                        face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
-                        age = [ sub['age'] for sub in face_analysis ]
-                        emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
-
-                        confidence = face_confidence(face_distances[best_match_index]) + ".Acceso Autorizado." + str(age) + str(emotion)
-                        matching = True
+                        confidence = face_confidence(face_distances[best_match_index])
+                        acceso = 'Acceso Autorizado'
                         prename = name
                         img = frame
                         now = datetime.now()
                         logging.info(now)
-                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/imagenes/{name}")
+                        os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes/{name}")
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
-                        
+                        #face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
+                        #age = [ sub['age'] for sub in face_analysis ]
+                        #emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
 
+                    self.face_names = [(name, confidence, acceso, age, emotion)]
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
-                    self.face_names.append(f'{name} {confidence}')
+                   # self.face_names.append(f'{name} {confidence}')          
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
-            # Creamos el cuadrado que enmarca la cara reconocida.
-            for (top, right, bottom, left), name in zip(self.face_locations, self.face_names):
+ 
+            for (top, right, bottom, left), (name, confidence, acceso, age, emotion) in zip(self.face_locations, self.face_names):
                 # Reescalamos la posición de la cara, ya que antes la habíamos reducido a 1/4.
                 top *= 4
                 right *= 4
                 bottom *= 4
                 left *= 4
-
-                (name_por, caracs) = os.path.splitext(name)
-                (name_por2, autori) = os.path.splitext(name_por)
-
-
-                if matching == True:
-                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/rostros/{prename}")
-                        frame_cara = frame[top:bottom, left:right] 
-                        print("[INFO] Object found. Saving locally.") 
-                        cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
-                else:
-                    pass
-
-
-                
-
-
+                if acceso == 'Acceso Autorizado':
+                    os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros/{prename}")
+                    frame_cara = frame[top:bottom, left:right] 
+                    print("[INFO] Object found. Saving locally.") 
+                    cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
 
                 # Creamos el marco con el nombre
                 # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
                 # Hacemos el rectángulo para el nombre y la confidence
                 # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
-                cv2.rectangle(frame, (left, bottom + 90), (right, bottom), (0, 0, 255), cv2.FILLED)
+                cv2.rectangle(frame, (left, bottom - 60), (right, bottom), (0, 0, 255), cv2.FILLED)
                 # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
-                cv2.putText(frame, name_por2, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, autori[1:], (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, caracs[1:], (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, name, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, confidence , (left + 126, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, acceso , (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, age , (left + 6, bottom - 96), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, emotion , (left + 6, bottom - 126), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
             # Mostramos la imagen resultante
