@@ -50,17 +50,6 @@ class FaceRecognition:
         # Hacemos referencia a las imagenes d ela carpeta "faces".
         for image in os.listdir('faces'):
 
-            directory = image
-            parent_dir = "/Users/Pablo/Factoria F5/CV_grupo11/imagenes"
-            mode = 0o666
-            path = os.path.join(parent_dir, directory)
-            os.makedirs(path, mode, exist_ok = True)
-
-            parent_dir2 = "/Users/Pablo/Factoria F5/CV_grupo11/rostros"
-            path2 = os.path.join(parent_dir2, directory)
-            os.makedirs(path2, mode, exist_ok = True)
-            
-
             # Cargamos la imagen de la carpeta "faces".
             face_image = face_recognition.load_image_file(f"faces/{image}")
             # Codificamos la imagen que hemos cargado antes.
@@ -76,6 +65,17 @@ class FaceRecognition:
             logging.info(f"Probando {filename}")
             # Añadimos el nombre de la cara conocida a nombres conocidos
             self.known_face_names.append(filename)
+
+            directory = filename
+            parent_dir = "/Users/Pablo/Factoria F5/CV_grupo11/imagenes"
+            mode = 0o666
+            path = os.path.join(parent_dir, directory)
+            os.makedirs(path, mode, exist_ok = True)
+
+            parent_dir2 = "/Users/Pablo/Factoria F5/CV_grupo11/rostros"
+            path2 = os.path.join(parent_dir2, directory)
+            os.makedirs(path2, mode, exist_ok = True)
+
         # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
         print(self.known_face_names)
 
@@ -133,14 +133,14 @@ class FaceRecognition:
                         img = frame
                         now = datetime.now()
                         logging.info(now)
-                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/imagenes/{name}.jpg")
+                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/imagenes/{name}")
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
                         
 
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
-                    self.face_names.append(f'{name} ({confidence})')          
+                    self.face_names.append(f'{name} {confidence}')          
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
@@ -155,7 +155,7 @@ class FaceRecognition:
                 (name_por, autori) = os.path.splitext(name)
 
                 if matching == True:
-                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/rostros/{prename}.jpg")
+                        os.chdir(f"/Users/Pablo/Factoria F5/CV_grupo11/rostros/{prename}")
                         frame_cara = frame[top:bottom, left:right] 
                         print("[INFO] Object found. Saving locally.") 
                         cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
@@ -172,7 +172,7 @@ class FaceRecognition:
                 cv2.rectangle(frame, (left, bottom - 60), (right, bottom), (0, 0, 255), cv2.FILLED)
                 # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
                 cv2.putText(frame, name_por, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, autori, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, autori[1:], (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
 
             # Mostramos la imagen resultante
