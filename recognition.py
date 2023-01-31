@@ -7,6 +7,10 @@ import math
 import logging
 from datetime import datetime
 from deepface import DeepFace
+from dotenv import load_dotenv
+
+load_dotenv()
+ruta = os.getenv('ruta')
 
 
 # Creamos una configuración de log para ir añadiéndolos
@@ -78,11 +82,11 @@ class FaceRecognition:
             self.known_face_names.append(filename)
 
             directory = filename
-            parent_dir = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes"
+            parent_dir = f"{ruta}/CV_grupo11/imagenes"
             path = os.path.join(parent_dir, directory)
             os.makedirs(path, exist_ok = True)
 
-            parent_dir2 = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros"
+            parent_dir2 = f"{ruta}/CV_grupo11/rostros"
             path2 = os.path.join(parent_dir2, directory)
             os.makedirs(path2, exist_ok = True)
 
@@ -151,7 +155,7 @@ class FaceRecognition:
                         now = datetime.now()                        
                         color = (0, 143, 57)
                         logging.info(now)
-                        os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes/{name}")
+                        os.chdir(f"{ruta}/CV_grupo11/imagenes/{name}")
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
@@ -171,7 +175,7 @@ class FaceRecognition:
                 left *= 4
 
                 if acceso == 'Access Granted':
-                    os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros/{name}")
+                    os.chdir(f"{ruta}/CV_grupo11/rostros/{name}")
                     frame_cara = frame[top:bottom, left:right] 
                     print("[INFO] Object found. Saving locally.") 
                     cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
@@ -208,6 +212,3 @@ class FaceRecognition:
         # Cierra la cámara y todas las pestañas.(Tras haber pulsado Q)
         video_capture.release()
         cv2.destroyAllWindows()
-
-
-
