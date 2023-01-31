@@ -30,6 +30,14 @@ def face_confidence(face_distance, face_match_threshold=0.6):
         value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
         return str(round(value, 2)) + '%'
 
+def detectaEdades(frame):
+    face_analysis = DeepFace.analyze(img_path = frame, actions = ["age"], enforce_detection = False)
+    age = [ sub['age'] for sub in face_analysis ]
+    return age
+def detectaEmociones(frame):
+    face_analysis = DeepFace.analyze(img_path = frame, actions = ["emotion"], enforce_detection = False)
+    emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
+    return emotion
 # Creamos la clase "Facerecognition" para el reconocimiento de caras.
 class FaceRecognition:
     # Creamos variables para guardar las coordenadas, las codificaciones y los nombres de las caras detectadas, y los nombres y las
@@ -41,6 +49,8 @@ class FaceRecognition:
     known_face_names = []
     # Recomendación de la docu para ahorrar computación.
     process_current_frame = True
+    emociones = False
+    edades= False
 
     # Creamos una función para que se inicien las codificaciones de las caras.
     def __init__(self):
@@ -68,11 +78,11 @@ class FaceRecognition:
             self.known_face_names.append(filename)
 
             directory = filename
-            parent_dir = "/CV_grupo11/imagenes"
+            parent_dir = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes"
             path = os.path.join(parent_dir, directory)
             os.makedirs(path, exist_ok = True)
 
-            parent_dir2 = "/CV_grupo11/rostros"
+            parent_dir2 = "/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros"
             path2 = os.path.join(parent_dir2, directory)
             os.makedirs(path2, exist_ok = True)
 
@@ -88,8 +98,7 @@ class FaceRecognition:
         # Creamos exepción por si no se inicia la captura de video.
         if not video_capture.isOpened():
             sys.exit('Video source not found...')
-
-        # Creamos buqle para seguir con el proceso.
+    # Creamos buqle para seguir con el proceso.
         while True:
             # Leemos la captura y extraemos el fotograma en "frame" y "ret" nos indicará "True" si la captura ha sido exitosa.
             ret, frame = video_capture.read()
@@ -134,17 +143,15 @@ class FaceRecognition:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
 
-                        face_analysis = DeepFace.analyze(img_path = frame, actions = ["age", "emotion"], enforce_detection = False)
-                        age = [ sub['age'] for sub in face_analysis ]
-                        emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
-
+                        if self.edades == True: age = detectaEdades(frame)
+                        if self.emociones == True: emotion = detectaEmociones(frame)
                         confidence = face_confidence(face_distances[best_match_index])
                         acceso = 'Acceso Autorizado'
                         img = frame
                         now = datetime.now()                        
                         color = (0, 143, 57)
                         logging.info(now)
-                        os.chdir(f"/CV_grupo11/imagenes/{name}")
+                        os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/imagenes/{name}")
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
@@ -164,7 +171,7 @@ class FaceRecognition:
                 left *= 4
 
                 if acceso == 'Access Granted':
-                    os.chdir(f"/CV_grupo11/rostros/{name}")
+                    os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros/{name}")
                     frame_cara = frame[top:bottom, left:right] 
                     print("[INFO] Object found. Saving locally.") 
                     cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
@@ -186,7 +193,14 @@ class FaceRecognition:
             # Mostramos la imagen resultante
             salida_camara = cv2.resize(frame, (0, 0), fx=1, fy=1)
             cv2.imshow('Reconocimiento Facial', salida_camara)
-
+            if cv2.waitKey(1) == ord('e'):
+                self.edades = True
+            if cv2.waitKey(1) == ord('r'):
+                self.edades = False
+            if cv2.waitKey(1) == ord('n'):
+                self.emociones = True
+            if cv2.waitKey(1) == ord('m'):
+                self.emociones = False
             # Fijamos la letra 'Q' del teclado, para romper el bucle y salir del reconocimiento facial.
             if cv2.waitKey(1) == ord('q'):
                 break
@@ -194,3 +208,6 @@ class FaceRecognition:
         # Cierra la cámara y todas las pestañas.(Tras haber pulsado Q)
         video_capture.release()
         cv2.destroyAllWindows()
+
+
+
