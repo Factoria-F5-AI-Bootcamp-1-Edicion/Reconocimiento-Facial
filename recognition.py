@@ -139,8 +139,7 @@ class FaceRecognition:
                         emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
 
                     self.face_names = [(name, confidence, acceso, age, emotion)]
-                    # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.
-                   # self.face_names.append(f'{name} {confidence}')          
+                    # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.       
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
 
@@ -151,12 +150,6 @@ class FaceRecognition:
                 right *= 4
                 bottom *= 4
                 left *= 4
-                if acceso == 'Acceso Autorizado':
-                    os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros/{prename}")
-                    frame_cara = frame[top:bottom, left:right] 
-                    print("[INFO] Object found. Saving locally.") 
-                    cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
-
                 # Creamos el marco con el nombre
                 # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -167,8 +160,13 @@ class FaceRecognition:
                 cv2.putText(frame, name, (left + 6, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
                 cv2.putText(frame, confidence , (left + 126, bottom - 36), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
                 cv2.putText(frame, acceso , (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, age , (left + 6, bottom - 96), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, emotion , (left + 6, bottom - 126), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, str(age) , (left + 6, bottom - 96), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                cv2.putText(frame, str(emotion) , (left + 6, bottom - 126), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+                if acceso == 'Acceso Autorizado':
+                    os.chdir(f"/home/perseis/Factoriaf5/ejercicios/CV_grupo11/rostros/{prename}")
+                    frame_cara = frame[top:bottom, left:right] 
+                    print("[INFO] Object found. Saving locally.") 
+                    cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
 
 
             # Mostramos la imagen resultante
