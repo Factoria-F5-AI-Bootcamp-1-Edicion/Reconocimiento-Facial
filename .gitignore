@@ -1,6 +1,7 @@
 faces/
 __pycache__/
 imagenes/
+boxes/
 logs/
 rostros/
 .env

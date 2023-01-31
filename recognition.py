@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 load_dotenv()
 ruta = os.getenv('ruta')
 
+dt = datetime.now()
+seg = dt.strftime("%Y-%m-%d %H;%M;%S")
+min = dt.strftime("%Y-%m-%d %H;%M")
 
 # Creamos una configuración de log para ir añadiéndolos
 logging.basicConfig(
@@ -63,6 +66,11 @@ def encode_faces(known_face_encodings, known_face_names):
         parent_dir2 = f"{ruta}/CV_grupo11/rostros"
         path2 = os.path.join(parent_dir2, directory)
         os.makedirs(path2, exist_ok = True)
+
+        parent_dir2 = f"{ruta}/CV_grupo11/boxes"
+        path3 = os.path.join(parent_dir2, directory)
+        os.makedirs(path3, exist_ok = True)
+
     # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
     print(known_face_names)
 
@@ -74,7 +82,7 @@ def guardaRostros(frame,name, top, right, bottom, left):
     cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
 
 def posicionRectangulos(frame,face_locations, face_names):
-    for (top, right, bottom, left), (name, confidence, age, emotion, color, acceso) in zip(face_locations, face_names):
+    for (top, right, bottom, left), (name, confidence, age, emotion, color, acceso, race) in zip(face_locations, face_names):
         # Reescalamos la posición de la cara, ya que antes la habíamos reducido a 1/4.
         top *= 4
         right *= 4
@@ -91,11 +99,18 @@ def posicionRectangulos(frame,face_locations, face_names):
         cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
         # Hacemos el rectángulo para el nombre y la confidence
         # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
-        cv2.rectangle(frame, (left, bottom + 90), (right, bottom), color, cv2.FILLED)
+        cv2.rectangle(frame, (left, bottom + 120), (right + 90, bottom), color, cv2.FILLED)
         # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
         cv2.putText(frame, acceso , (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-        cv2.putText(frame, "Name:"+name+" "+"Trust:"+confidence, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        cv2.putText(frame, name+" "+"Trust:"+confidence, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
         cv2.putText(frame, "Age:"+str(age)[1:-1]+" Emotion:"+str(emotion)[2:-2] , (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        cv2.putText(frame, "Race:"+str(race)[2:-2] , (left + 6, bottom + 110), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+
+        if acceso == 'Access Granted':
+            os.chdir(f"{ruta}/CV_grupo11/boxes/{name}")
+            cv2.imwrite(f'{min}.jpg', frame)
+        else:
+            pass
 
 def detectaEdades(frame):
     face_analysis = DeepFace.analyze(img_path = frame, actions = ["age"], enforce_detection = False)
@@ -105,6 +120,10 @@ def detectaEmociones(frame):
     face_analysis = DeepFace.analyze(img_path = frame, actions = ["emotion"], enforce_detection = False)
     emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
     return emotion
+def detectaRazas(frame):
+    face_analysis = DeepFace.analyze(img_path = frame, actions = ["race"], enforce_detection = False)
+    race = [ sub['dominant_race'] for sub in face_analysis ]
+    return race
 
 # Creamos la clase "Facerecognition" para el reconocimiento de caras.
 class FaceRecognition:
@@ -119,6 +138,7 @@ class FaceRecognition:
     process_current_frame = True
     emociones = False
     edades= False
+    razas= False
 
     # Creamos una función para que se inicien las codificaciones de las caras.
     def __init__(self):
@@ -165,6 +185,7 @@ class FaceRecognition:
                     acceso = 'Access Denied'
                     age = ' ? '
                     emotion = '  ?  '
+                    race = '  ?  '
                     color = (0, 0, 255)
 
                     # Calculamos la 'face_distance', es decir, la similitud entre la cara que ve la cámara y las caras conocidas
@@ -182,15 +203,14 @@ class FaceRecognition:
                         img = frame
                         now = datetime.now()                        
                         color = (0, 143, 57)
-                        logging.info(now)
+                        logging.info(seg)
                         os.chdir(f"{ruta}/CV_grupo11/imagenes/{name}")
-                        filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
-                        logging.info(filename)
-                        cv2.imwrite(filename,img)
+                        cv2.imwrite(f'{min}.jpg',img)
                         if self.edades == True: age = detectaEdades(frame)
                         if self.emociones == True: emotion = detectaEmociones(frame)
+                        if self.razas == True: race = detectaRazas(frame)
 
-                    self.face_names.append((name, confidence, age, emotion, color, acceso))
+                    self.face_names.append((name, confidence, age, emotion, color, acceso, race))
                     logging.info(f"Probando {self.face_names}")
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.       
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
@@ -209,6 +229,11 @@ class FaceRecognition:
                 self.emociones = True
             if cv2.waitKey(1) == ord('m'):
                 self.emociones = False
+            if cv2.waitKey(1) == ord('z'):
+                self.razas = True
+            if cv2.waitKey(1) == ord('x'):
+                self.razas = False
+            
             # Fijamos la letra 'Q' del teclado, para romper el bucle y salir del reconocimiento facial.
             if cv2.waitKey(1) == ord('q'):
                 break
