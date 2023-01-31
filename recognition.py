@@ -34,6 +34,69 @@ def face_confidence(face_distance, face_match_threshold=0.6):
         value = (linear_val + ((1.0 - linear_val) * math.pow((linear_val - 0.5) * 2, 0.2))) * 100
         return str(round(value, 2)) + '%'
 
+# Creamos la función de codificación de las caras.
+def encode_faces(known_face_encodings, known_face_names):
+    # Hacemos referencia a las imagenes d ela carpeta "faces".
+    for image in os.listdir('faces'):
+
+        # Cargamos la imagen de la carpeta "faces".
+        face_image = face_recognition.load_image_file(f"faces/{image}")
+        # Codificamos la imagen que hemos cargado antes.
+        face_encoding = face_recognition.face_encodings(face_image)[0]
+
+        # Añadimos la codificación de la imagen a la variable "known_face_encodings" y el nombre a "known_face_names".
+        known_face_encodings.append(face_encoding)
+        logging.info(f"Probando {image}")
+        # Obtenemos solo el nombre, sin la extensión.
+        basename = os.path.basename(image)
+        logging.info(f"Probando {basename}")
+        (filename, ext) = os.path.splitext(basename)
+        logging.info(f"Probando {filename}")
+        # Añadimos el nombre de la cara conocida a nombres conocidos
+        known_face_names.append(filename)
+
+        directory = filename
+        parent_dir = f"{ruta}/CV_grupo11/imagenes"
+        path = os.path.join(parent_dir, directory)
+        os.makedirs(path, exist_ok = True)
+
+        parent_dir2 = f"{ruta}/CV_grupo11/rostros"
+        path2 = os.path.join(parent_dir2, directory)
+        os.makedirs(path2, exist_ok = True)
+    # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
+    print(known_face_names)
+
+def guardaRostros(frame,name, top, right, bottom, left):
+    os.chdir(f"{ruta}/CV_grupo11/rostros/{name}")
+    frame_cara = frame[top:bottom, left:right]
+    now = datetime.now() 
+    print("[INFO] Object found. Saving locally.") 
+    cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
+
+def posicionRectangulos(frame,face_locations, face_names):
+    for (top, right, bottom, left), (name, confidence, age, emotion, color, acceso) in zip(face_locations, face_names):
+        # Reescalamos la posición de la cara, ya que antes la habíamos reducido a 1/4.
+        top *= 4
+        right *= 4
+        bottom *= 4
+        left *= 4
+
+        if acceso == 'Access Granted':
+            guardaRostros(frame,name, top, right, bottom, left)
+        else:
+            pass
+
+        # Creamos el marco con el nombre
+        # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
+        cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+        # Hacemos el rectángulo para el nombre y la confidence
+        # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
+        cv2.rectangle(frame, (left, bottom + 90), (right, bottom), color, cv2.FILLED)
+        # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
+        cv2.putText(frame, acceso , (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        cv2.putText(frame, "Name:"+name+" "+"Trust:"+confidence, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        cv2.putText(frame, "Age:"+str(age)[1:-1]+" Emotion:"+str(emotion)[2:-2] , (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+
 def detectaEdades(frame):
     face_analysis = DeepFace.analyze(img_path = frame, actions = ["age"], enforce_detection = False)
     age = [ sub['age'] for sub in face_analysis ]
@@ -42,6 +105,7 @@ def detectaEmociones(frame):
     face_analysis = DeepFace.analyze(img_path = frame, actions = ["emotion"], enforce_detection = False)
     emotion = [ sub['dominant_emotion'] for sub in face_analysis ]
     return emotion
+
 # Creamos la clase "Facerecognition" para el reconocimiento de caras.
 class FaceRecognition:
     # Creamos variables para guardar las coordenadas, las codificaciones y los nombres de las caras detectadas, y los nombres y las
@@ -58,40 +122,7 @@ class FaceRecognition:
 
     # Creamos una función para que se inicien las codificaciones de las caras.
     def __init__(self):
-        self.encode_faces()
-
-    # Creamos la función de codificación de las caras.
-    def encode_faces(self):
-        # Hacemos referencia a las imagenes d ela carpeta "faces".
-        for image in os.listdir('faces'):
-
-            # Cargamos la imagen de la carpeta "faces".
-            face_image = face_recognition.load_image_file(f"faces/{image}")
-            # Codificamos la imagen que hemos cargado antes.
-            face_encoding = face_recognition.face_encodings(face_image)[0]
-
-            # Añadimos la codificación de la imagen a la variable "known_face_encodings" y el nombre a "known_face_names".
-            self.known_face_encodings.append(face_encoding)
-            logging.info(f"Probando {image}")
-            # Obtenemos solo el nombre, sin la extensión.
-            basename = os.path.basename(image)
-            logging.info(f"Probando {basename}")
-            (filename, ext) = os.path.splitext(basename)
-            logging.info(f"Probando {filename}")
-            # Añadimos el nombre de la cara conocida a nombres conocidos
-            self.known_face_names.append(filename)
-
-            directory = filename
-            parent_dir = f"{ruta}/CV_grupo11/imagenes"
-            path = os.path.join(parent_dir, directory)
-            os.makedirs(path, exist_ok = True)
-
-            parent_dir2 = f"{ruta}/CV_grupo11/rostros"
-            path2 = os.path.join(parent_dir2, directory)
-            os.makedirs(path2, exist_ok = True)
-
-        # Sacamos por consola el nombre de las imagenes que hemos añadido a las variables.
-        print(self.known_face_names)
+        encode_faces(self.known_face_encodings, self.known_face_names)
 
     # Creamos la función que pondrá en marcha todo el preceso.
     def run_recognition(self):
@@ -146,9 +177,6 @@ class FaceRecognition:
                     if matches[best_match_index]:
                         # Se elige el nombre y el confidence de la cara conocida con match más alto.
                         name = self.known_face_names[best_match_index]
-
-                        if self.edades == True: age = detectaEdades(frame)
-                        if self.emociones == True: emotion = detectaEmociones(frame)
                         confidence = face_confidence(face_distances[best_match_index])
                         acceso = 'Access Granted'
                         img = frame
@@ -159,41 +187,17 @@ class FaceRecognition:
                         filename = f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.jpg'
                         logging.info(filename)
                         cv2.imwrite(filename,img)
+                        if self.edades == True: age = detectaEdades(frame)
+                        if self.emociones == True: emotion = detectaEmociones(frame)
 
                     self.face_names.append((name, confidence, age, emotion, color, acceso))
                     logging.info(f"Probando {self.face_names}")
                     # Añadimos a la lista de nombres el name y la confidence, que luego se mostrarán en pantalla.       
             # Tras analizar un fotograma, cambia 'process_current_frame' a False, de tal manera que analiza uno de cada dos fotogramas, para ahorrar memoria.
             self.process_current_frame = not self.process_current_frame
-
- 
-            for (top, right, bottom, left), (name, confidence, age, emotion, color, acceso) in zip(self.face_locations, self.face_names):
-                # Reescalamos la posición de la cara, ya que antes la habíamos reducido a 1/4.
-                top *= 4
-                right *= 4
-                bottom *= 4
-                left *= 4
-
-                if acceso == 'Access Granted':
-                    os.chdir(f"{ruta}/CV_grupo11/rostros/{name}")
-                    frame_cara = frame[top:bottom, left:right] 
-                    print("[INFO] Object found. Saving locally.") 
-                    cv2.imwrite(f'{now.year}-{now.month}-{now.day} {now.hour}.{now.minute}.{now.second}.jpg', frame_cara)
-                else:
-                    pass
-
-                # Creamos el marco con el nombre
-                # Indicamos el frame, la posición, el color del marco (0,0,255)=Rojo, y el grosor del marco (2 en este caso).
-                cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
-                # Hacemos el rectángulo para el nombre y la confidence
-                # Indicamos el frame, la posicion, que será mas abajo que el cuadro de la cara, y con la función cv2.FILLED rellenamos el rectángulo.
-                cv2.rectangle(frame, (left, bottom + 90), (right, bottom), color, cv2.FILLED)
-                # Colocamos el texto y el acceso, más abajo y más a la derecha de la posición de la cara, elegimos la fuente, el tamaño de fuente, color y grosor.
-                cv2.putText(frame, acceso , (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, "Name:"+name+" "+"Trust:"+confidence, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                cv2.putText(frame, "Age:"+str(age)[1:-1]+" Emotion:"+str(emotion)[2:-2] , (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-                
-
+            
+            posicionRectangulos(frame,self.face_locations, self.face_names)
+            
             # Mostramos la imagen resultante
             salida_camara = cv2.resize(frame, (0, 0), fx=1, fy=1)
             cv2.imshow('Reconocimiento Facial', salida_camara)
