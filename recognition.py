@@ -150,7 +150,7 @@ class FaceRecognition:
                         if self.edades == True: age = detectaEdades(frame)
                         if self.emociones == True: emotion = detectaEmociones(frame)
                         confidence = face_confidence(face_distances[best_match_index])
-                        acceso = 'Acceso Autorizado'
+                        acceso = 'Access Granted'
                         img = frame
                         now = datetime.now()                        
                         color = (0, 143, 57)
