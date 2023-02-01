@@ -2,7 +2,7 @@ import cv2
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from source.guarda_imagenes import guardaRostros
+from source.guarda_imagenes import guardaRostros, guardaBoxes
 
 load_dotenv()
 ruta = os.getenv('ruta')
@@ -32,7 +32,6 @@ def posicionRectangulos(frame,face_locations, face_names):
         cv2.putText(frame, "Race:"+str(race)[2:-2] , (left + 6, bottom + 110), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1) # Colocamos el texto (acceso, nombre, confianza, edad, emocion, raza)
 
         if acceso == 'Access Granted':
-            os.chdir(f"{ruta}/CV_grupo11/boxes/{name}")
-            cv2.imwrite(f'{min}.jpg', frame)
+            guardaBoxes(name, frame)
         else:
             pass

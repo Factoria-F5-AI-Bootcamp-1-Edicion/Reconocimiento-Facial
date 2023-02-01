@@ -25,3 +25,9 @@ def guardaRostros(frame,name, top, right, bottom, left):
 def guardaFotoLogin(name, img):
     os.chdir(f"{ruta}/CV_grupo11/imagenes/{name}")
     cv2.imwrite(f'{min}.jpg',img)
+
+#--------------Función para guardar una imagen por minuto del rostro reconocido con bounding box y etiqueta---------------
+
+def guardaBoxes(name, frame):
+    os.chdir(f"{ruta}/CV_grupo11/boxes/{name}")
+    cv2.imwrite(f'{min}.jpg', frame)
