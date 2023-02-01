@@ -1,24 +1,16 @@
 # Instalación de las librerías necesarias: "pip install opencv-python", "pip install face_recognition".
 import face_recognition
-import os, sys
+import sys
 import cv2
 import numpy as np
+
+# Importamos las funciones de los otros archivos
 from confidence import face_confidence
-from datetime import datetime
 from otros_analisis import analisis_opcionales
-from dotenv import load_dotenv
 from codificador import codifica_caras_conocidas, codifica_caras_webcam
 from logging_config import logging
 from rectangulos_cara import posicionRectangulos
 from guarda_imagenes import guardaFotoLogin
-
-load_dotenv()
-ruta = os.getenv('ruta')
-
-dt = datetime.now()
-seg = dt.strftime("%Y-%m-%d %H;%M;%S")
-min = dt.strftime("%Y-%m-%d %H;%M")
- 
 
 # Creamos la clase "Facerecognition" para el reconocimiento de caras.
 class FaceRecognition:
@@ -84,10 +76,8 @@ class FaceRecognition:
                         name = self.known_face_names[best_match_index]
                         confidence = face_confidence(face_distances[best_match_index])
                         acceso = 'Access Granted'
-                        img = frame
-                        now = datetime.now()                        
+                        img = frame                       
                         color = (0, 143, 57)
-                        logging.info(seg)
                         guardaFotoLogin(name, img)
                         age, emotion, race = analisis_opcionales(frame, self.edades, self.emociones, self.razas)
 
