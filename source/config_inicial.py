@@ -3,20 +3,20 @@
 def configuracion_inicial():
     print('Le doy la bienvenida a la APP de login facial.')
     print('Antes configuremos algunas cosas.')
-    print('Desea utilizar el reconocimiento de edad?')
-    respuesta1 = input('s/n')
+    print('Desea utilizar el reconocimiento de edad? [s/n]')
+    respuesta1 = input()
     if respuesta1 == 's':
         edades = True
     else:
         edades = False
-    print('Desea utilizar el reconocimiento de emociones?')
-    respuesta2 = input('s/n')
+    print('Desea utilizar el reconocimiento de emociones? [s/n]')
+    respuesta2 = input()
     if respuesta2 == 's':
         emociones = True
     else:
         emociones = False
-    print('Desea utilizar el reconocimiento de raza?')
-    respuesta3 = input('s/n')
+    print('Desea utilizar el reconocimiento de raza? [s/n]')
+    respuesta3 = input()
     if respuesta3 == 's':
         razas = True
     else:
