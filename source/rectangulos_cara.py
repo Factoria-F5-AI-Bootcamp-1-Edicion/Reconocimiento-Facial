@@ -2,7 +2,7 @@ import cv2
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from guarda_imagenes import guardaRostros
+from source.guarda_imagenes import guardaRostros
 
 load_dotenv()
 ruta = os.getenv('ruta')

@@ -5,12 +5,12 @@ import cv2
 import numpy as np
 
 # Importamos las funciones de los otros archivos
-from confidence import face_confidence
-from otros_analisis import analisis_opcionales
-from codificador import codifica_caras_conocidas, codifica_caras_webcam
-from logging_config import logging
-from rectangulos_cara import posicionRectangulos
-from guarda_imagenes import guardaFotoLogin
+from source.confidence import face_confidence
+from source.otros_analisis import analisis_opcionales
+from source.codificador import codifica_caras_conocidas, codifica_caras_webcam
+from source.logging_config import logging
+from source.rectangulos_cara import posicionRectangulos
+from source.guarda_imagenes import guardaFotoLogin
 
 # Creamos la clase "Facerecognition" para el reconocimiento de caras.
 class FaceRecognition:

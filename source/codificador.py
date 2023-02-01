@@ -2,7 +2,7 @@ import face_recognition
 import os
 from dotenv import load_dotenv
 import cv2
-from logging_config import logging
+from source.logging_config import logging
 
 load_dotenv()
 ruta = os.getenv('ruta')
