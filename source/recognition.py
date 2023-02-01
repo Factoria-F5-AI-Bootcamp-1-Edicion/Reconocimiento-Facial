@@ -5,9 +5,10 @@ import cv2
 import numpy as np
 
 # Importamos las funciones de los otros archivos
+from source.codificador import codifica_caras_conocidas, codifica_caras_webcam
+from source.config_inicial import configuracion_inicial
 from source.confidence import face_confidence
 from source.otros_analisis import analisis_opcionales
-from source.codificador import codifica_caras_conocidas, codifica_caras_webcam
 from source.logging_config import logging
 from source.rectangulos_cara import posicionRectangulos
 from source.guarda_imagenes import guardaFotoLogin
@@ -27,6 +28,7 @@ class FaceRecognition:
     #----------------------------------------------- Función de inicio--------------------------------------------------------------
     def __init__(self):
         codifica_caras_conocidas(self.known_face_encodings, self.known_face_names) # Codificamos las caras de la carpeta /faces
+        self.edades, self.emociones, self.razas = configuracion_inicial()
 
     #------------------------------------- Función que pondrá en marcha todo el preceso---------------------------------------------
     def run_recognition(self):
@@ -75,19 +77,7 @@ class FaceRecognition:
             
             salida_camara = cv2.resize(frame, (0, 0), fx=1, fy=1)
             cv2.imshow('Reconocimiento Facial', salida_camara) # Mostramos la imagen resultante
-            if cv2.waitKey(1) == ord('e'):
-                self.edades = True
-            if cv2.waitKey(1) == ord('r'):
-                self.edades = False
-            if cv2.waitKey(1) == ord('n'):
-                self.emociones = True
-            if cv2.waitKey(1) == ord('m'):
-                self.emociones = False
-            if cv2.waitKey(1) == ord('z'):
-                self.razas = True
-            if cv2.waitKey(1) == ord('x'):
-                self.razas = False
-            
+
             if cv2.waitKey(1) == ord('q'): # Fijamos la letra 'Q' del teclado, para romper el bucle y salir del reconocimiento facial.
                 break
         video_capture.release()
