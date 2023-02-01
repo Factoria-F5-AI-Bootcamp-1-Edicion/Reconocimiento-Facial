@@ -28,8 +28,9 @@ def posicionRectangulos(frame,face_locations, face_names):
         cv2.rectangle(frame, (left, bottom + 120), (right + 90, bottom), color, cv2.FILLED) # Hacemos el rectángulo para el nombre y la confidence. Con v2.FILLED rellenamos el rectángulo.
         cv2.putText(frame, acceso , (left + 6, bottom + 20), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
         cv2.putText(frame, name+" "+"Trust:"+confidence, (left + 6, bottom + 50), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-        cv2.putText(frame, "Age:"+str(age)[1:-1]+" Emotion:"+str(emotion)[2:-2] , (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
-        cv2.putText(frame, "Race:"+str(race)[2:-2] , (left + 6, bottom + 110), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1) # Colocamos el texto (acceso, nombre, confianza, edad, emocion, raza)
+        if age != '  ?  ': cv2.putText(frame, "Age:"+str(age)[1:-1], (left + 6, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        if emotion != '  ?  ': cv2.putText(frame, "Emotion:"+str(emotion)[2:-2] , (left + 116, bottom + 80), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+        if race != '  ?  ': cv2.putText(frame, "Race:"+str(race)[2:-2] , (left + 6, bottom + 110), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1) # Colocamos el texto (acceso, nombre, confianza, edad, emocion, raza)
 
         if acceso == 'Access Granted':
             guardaBoxes(name, frame)

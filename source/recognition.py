@@ -52,7 +52,7 @@ class FaceRecognition:
                     name = 'Unknown' # Dejamos por defecto 'Unknow' para caras no conocidas
                     confidence = '?'
                     acceso = 'Access Denied'
-                    age = ' ? '
+                    age = '  ?  '
                     emotion = '  ?  '
                     race = '  ?  '
                     color = (0, 0, 255)

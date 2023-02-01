@@ -20,9 +20,9 @@ def detectaRazas(frame):
 
 #----------Función para activar los valores de edad, emocion y raza en el caso de necesitarlos---------------
 def analisis_opcionales(frame, edades, emociones, razas):
-    age = ' ? '
-    emotion = ' ? '
-    race = ' ? '
+    age = '  ?  '
+    emotion = '  ?  '
+    race = '  ?  '
     if edades == True: age = detectaEdades(frame)
     if emociones == True: emotion = detectaEmociones(frame)
     if razas == True: race = detectaRazas(frame)
