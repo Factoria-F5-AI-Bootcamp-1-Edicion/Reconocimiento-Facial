@@ -13,8 +13,8 @@ pip install -r requirements.txt
 1. Cree una carpeta llamada faces/ dentro de la carpeta raíz CV_GRUPO11/.
 2. En esta carpeta introduzca las imágenes de las personas que quiere que sean reconocidas por el programa (1 imagen por persona).
 3. Se recomiendan los formatos .png o .jpg, y de calidad media.
-4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. Ejemplo:\n
-![nombre_archivo](img/archivo.png)
+4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. 
+* Ejemplo: ![nombre_archivo](img/archivo.png)
 ***Ejecución***
 5. Abra una terminal dentro de la carpeta raíz (CV_GRUPO11)
 6. Ejecute:
