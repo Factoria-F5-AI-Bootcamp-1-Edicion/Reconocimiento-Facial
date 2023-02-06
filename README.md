@@ -13,7 +13,7 @@ pip install -r requirements.txt
 1. Cree una carpeta llamada faces/ dentro de la carpeta raíz CV_GRUPO11/.
 2. En esta carpeta introduzca las imágenes de las personas que quiere que sean reconocidas por el programa (1 imagen por persona).
 3. Se recomiendan los formatos .png o .jpg, y de calidad media.
-4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. Ejemplo:
+4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. Ejemplo:\n
 ![nombre_archivo](img/archivo.png)
 ***Ejecución***
 5. Abra una terminal dentro de la carpeta raíz (CV_GRUPO11)
@@ -48,7 +48,7 @@ boxes/ -------------- Rostro recortado con etiquetas y box de la persona reconoc
 - cv2
 - deepface
 ### Créditos
-Código basado en la idea de [Idently] (https://www.youtube.com/watch?v=tl2eEBFEHqM&t=19s&ab_channel=Indently)
+Código basado en la idea de [Idently](https://www.youtube.com/watch?v=tl2eEBFEHqM&t=19s&ab_channel=Indently)
 **Coders:**
 - [Pablo Ruano](https://www.linkedin.com/in/pablo-ruano-sainz/)
 - [Nayare Montes](https://www.linkedin.com/in/nayare-montes-gavilan/)
