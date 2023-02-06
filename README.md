@@ -17,6 +17,7 @@ pip install -r requirements.txt
 * Ejemplo: ![nombre_archivo](img/archivo.png)
 
 ***Ejecución***
+
 5. Abra una terminal dentro de la carpeta raíz (CV_GRUPO11)
 6. Ejecute:
 ```
