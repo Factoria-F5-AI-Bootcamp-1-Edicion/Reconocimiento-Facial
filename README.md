@@ -15,6 +15,7 @@ pip install -r requirements.txt
 3. Se recomiendan los formatos .png o .jpg, y de calidad media.
 4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. 
 * Ejemplo:
+
  ![nombre_archivo](img/archivo.png)
 
 ***Ejecución***
@@ -28,10 +29,12 @@ python main.py
 8. La configuración inicial comenzará. Le preguntará si quiere añadir una serie de análisis opcionales, por el momento, detección de edad, emociones y raza.
 
 ![configuracion](img/config.png)
+
 9. Responda en minúscula **s** si quiere utilizar ese análisis y **n** si no quiere usarlo.
 10. Tras responder las 3 preguntas se abrirá la cámara, y comenzará el reconocimiento facial.
 
 ![demo](img/demo1.png)
+
 11. Ya puede usar la APP y ver el nombre de la persona reconocida, el porcentaje de confiablidad, si se le garantiza el acceso, y los resultados de los análisis opcionales.
 12. **Para finalizar la APP** y cerrar la cámara pulse la tecla **Q** en su teclado.
 ## ***Imágenes de login guardadas***
