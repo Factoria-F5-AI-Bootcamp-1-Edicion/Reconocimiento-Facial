@@ -42,7 +42,7 @@ Tras ejecutar con éxito la APP, se crearán 3 carpetas nuevas. Dentro de estas 
 ```
 imagenes/ ----------- Fotograma entero de la persona reconocida.
 rostros/ ------------ Rostro recortado de la persona reconocida.
-boxes/ -------------- Rostro recortado con etiquetas y box de la persona reconocida.
+boxes/ -------------- Fotograma entero con etiquetas y box de la persona reconocida.
 ```
 ### Metodologías utilizadas:
 - SCRUM (Metodología ágil) para la realización del proyecto.
