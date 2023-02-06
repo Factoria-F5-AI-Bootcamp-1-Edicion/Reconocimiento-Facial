@@ -40,9 +40,9 @@ python main.py
 ## ***Imágenes de login guardadas***
 Tras ejecutar con éxito la APP, se crearán 3 carpetas nuevas. Dentro de estas carpetas a su vez se creará una carpeta por persona en la carpeta faces/ con su respectivo nombre:
 ```
-imagenes/ ----------- Fotograma entero de la persona reconocida.
-rostros/ ------------ Rostro recortado de la persona reconocida.
-boxes/ -------------- Fotograma entero con etiquetas y box de la persona reconocida.
+imagenes/ ----------- Fotograma entero de la persona reconocida cada minuto.
+boxes/ -------------- Fotograma entero con etiquetas y box de la persona reconocida cada minuto.
+rostros/ ------------ Rostro recortado de la persona reconocida cada segundo.
 ```
 ### Metodologías utilizadas:
 - SCRUM (Metodología ágil) para la realización del proyecto.
