@@ -15,6 +15,7 @@ pip install -r requirements.txt
 3. Se recomiendan los formatos .png o .jpg, y de calidad media.
 4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. 
 * Ejemplo: ![nombre_archivo](img/archivo.png)
+
 ***Ejecución***
 5. Abra una terminal dentro de la carpeta raíz (CV_GRUPO11)
 6. Ejecute:
