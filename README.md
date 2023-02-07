@@ -8,14 +8,13 @@ Esta aplicación le permite detectar caras a través de la webcam de su equipo. 
 ```
 pip install -r requirements.txt
 ```
-***Creación de ruta de carpetas***
-
-4. Cree un archivo **.env** en la carpeta raíz.
-5. En este archivo escriba: ruta = (ruta de carpetas hasta su carpeta raíz. Ejemplo:
+# ***Creación de ruta de carpetas***
+1. Cree un archivo **.env** en la carpeta raíz.
+2. En este archivo escriba: ruta = (ruta de carpetas hasta su carpeta raíz. Ejemplo.
 ```
 ruta = /home/perseis/Factoriaf5/ejercicios
 ```
-6. No indique el nombre de la carpeta ríz, solo la ruta hasta la carpeta anterior.
+3. No indique el nombre de la carpeta ríz, solo la ruta hasta la carpeta anterior.
 ## ***¿Cómo arranco el programa?***
 ***Selección de personas reconocidas por la APP***
 1. Cree una carpeta llamada faces/ dentro de la carpeta raíz Reconocimiento-Facial/.
