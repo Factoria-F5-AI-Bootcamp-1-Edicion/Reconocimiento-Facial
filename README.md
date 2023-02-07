@@ -9,6 +9,7 @@ Esta aplicación le permite detectar caras a través de la webcam de su equipo. 
 pip install -r requirements.txt
 ```
 ***Creación de ruta de carpetas***
+
 4. Cree un archivo **.env** en la carpeta raíz.
 5. En este archivo escriba: ruta = (ruta de carpetas hasta su carpeta raíz. Ejemplo:
 ```
