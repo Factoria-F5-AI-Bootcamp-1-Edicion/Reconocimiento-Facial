@@ -1,14 +1,14 @@
 # Reconocimiento Facial con Visión Artificial
 ### ¿Para qué sirve esta APP?
 Esta aplicación le permite detectar caras a través de la webcam de su equipo. Usted podrá elegir que personas reconocerá el programa como conocidas, a las cuales concederá acceso, y cuáles personas no será reconocidas, negándoles acceso. Además de reconocer las caras, indicará el nombre de la persona reconocida, un porcentaje de confianza (¿qué tan seguro está el algoritmo de que esté acertando?), y opcionalmente otros datos como edad aproximada, emoción predominante y raza.
-# ***Instalación de librerías***
+## ***Instalación de librerías***
 1. Clone este repositorio en la carpeta que desee.
 2. Se aconseja crear un entorno destinado para este proyecto. Por ejemplo con conda o venv.
 3. Abra la terminal y ejecute:
 ```
 pip install -r requirements.txt
 ```
-# ***Creación de ruta de carpetas***
+## ***Creación de ruta de carpetas***
 1. Cree un archivo **.env** en la carpeta raíz.
 2. En este archivo escriba: ruta = (ruta de carpetas hasta su carpeta raíz. Ejemplo.
 ```
