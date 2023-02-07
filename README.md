@@ -1,4 +1,4 @@
-# Deteccción de Caras
+# Reconocimiento Facial con Visión Artificial
 ### ¿Para qué sirve esta APP?
 Esta aplicación le permite detectar caras a través de la webcam de su equipo. Usted podrá elegir que personas reconocerá el programa como conocidas, a las cuales concederá acceso, y cuáles personas no será reconocidas, negándoles acceso. Además de reconocer las caras, indicará el nombre de la persona reconocida, un porcentaje de confianza (¿qué tan seguro está el algoritmo de que esté acertando?), y opcionalmente otros datos como edad aproximada, emoción predominante y raza.
 # ***Instalación de librerías***
@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 ## ***¿Cómo arranco el programa***
 ***Selección de personas reconocidas por la APP***
-1. Cree una carpeta llamada faces/ dentro de la carpeta raíz CV_GRUPO11/.
+1. Cree una carpeta llamada faces/ dentro de la carpeta raíz Reconocimiento-Facial/.
 2. En esta carpeta introduzca las imágenes de las personas que quiere que sean reconocidas por el programa (1 imagen por persona).
 3. Se recomiendan los formatos .png o .jpg, y de calidad media.
 4. Cambie el nombre de cada foto introducida por el nombre de la persona de la foto. 
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ***Ejecución***
 
-5. Abra una terminal dentro de la carpeta raíz (CV_GRUPO11)
+5. Abra una terminal dentro de la carpeta raíz (Reconocimiento-Facial)
 6. Ejecute:
 ```
 python main.py
