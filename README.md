@@ -55,7 +55,7 @@ rostros/ ------------ Rostro recortado de la persona reconocida cada segundo.
 - SCRUM (Metodología ágil) para la realización del proyecto.
 - Pair programing para la creación de código.
 ### Tecnologías utilizadas:
-- Trello para hacer el [seguimiento](https://trello.com/b/yeRtRZHY/reconocimiento-facial)
+- Trello para hacer el [seguimiento](https://trello.com/invite/b/yeRtRZHY/ATTId144e988afd674adbb5a2bb2bdb900b43E4F840C/cvgrupo11)
 - Canva para realizar la presentación del proyecto.
 - Python como lenguaje de programación.
 ### Librerías utilizadas más importantes:
