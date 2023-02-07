@@ -8,6 +8,13 @@ Esta aplicación le permite detectar caras a través de la webcam de su equipo. 
 ```
 pip install -r requirements.txt
 ```
+***Creación de ruta de carpetas***
+4. Cree un archivo **.env** en la carpeta raíz.
+5. En este archivo escriba: ruta = (ruta de carpetas hasta su carpeta raíz. Ejemplo:
+```
+ruta = /home/perseis/Factoriaf5/ejercicios
+```
+6. No indique el nombre de la carpeta ríz, solo la ruta hasta la carpeta anterior.
 ## ***¿Cómo arranco el programa?***
 ***Selección de personas reconocidas por la APP***
 1. Cree una carpeta llamada faces/ dentro de la carpeta raíz Reconocimiento-Facial/.
@@ -48,13 +55,13 @@ rostros/ ------------ Rostro recortado de la persona reconocida cada segundo.
 - SCRUM (Metodología ágil) para la realización del proyecto.
 - Pair programing para la creación de código.
 ### Tecnologías utilizadas:
-- Trello para hacer el seguimiento: https://trello.com/b/yeRtRZHY/reconocimiento-facial
+- Trello para hacer el [seguimiento](https://trello.com/b/yeRtRZHY/reconocimiento-facial)
 - Canva para realizar la presentación del proyecto.
 - Python como lenguaje de programación.
 ### Librerías utilizadas más importantes:
-- face_recognition
-- cv2
-- deepface
+- [face_recognition](https://github.com/ageitgey/face_recognition)
+- [cv2](https://opencv.org/)
+- [deepface](https://github.com/serengil/deepface)
 ### Créditos
 Código basado en la idea de [Idently](https://www.youtube.com/watch?v=tl2eEBFEHqM&t=19s&ab_channel=Indently)
 
