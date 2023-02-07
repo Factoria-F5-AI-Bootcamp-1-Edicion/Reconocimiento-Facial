@@ -8,7 +8,7 @@ Esta aplicación le permite detectar caras a través de la webcam de su equipo. 
 ```
 pip install -r requirements.txt
 ```
-## ***¿Cómo arranco el programa***
+## ***¿Cómo arranco el programa?***
 ***Selección de personas reconocidas por la APP***
 1. Cree una carpeta llamada faces/ dentro de la carpeta raíz Reconocimiento-Facial/.
 2. En esta carpeta introduzca las imágenes de las personas que quiere que sean reconocidas por el programa (1 imagen por persona).
